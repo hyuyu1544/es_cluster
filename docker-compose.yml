@@ -1,0 +1,32 @@
+version: "2"
+
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
+    container_name: AWS-ES
+    hostname: AWS-ES
+    environment:
+      - cluster.name=es-docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms128m -Xmx128m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - AWS_ES:/usr/share/elasticsearch/data
+    ports:
+      - 19200:9200
+    networks:
+      - aws
+    logging:
+      driver: json-file
+      options:
+        max-size: 5m
+
+volumes:
+  AWS_ES:
+
+networks:
+  aws:
+    external: true
